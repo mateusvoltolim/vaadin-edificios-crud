@@ -1,28 +1,71 @@
 package com.mv.application.model;
 
+import jakarta.persistence.*;
+
 import java.util.List;
-import java.util.Objects;
 
-public record Edificio(int id, String nome, String endereco, List<Apartamento> apartamentos) {
+@Entity
+@Table(name = "edificio")
+public final class Edificio {
 
-    public void adicionarApartamento(Apartamento apartamento) {
-        this.apartamentos.add(apartamento);
+    @Id
+    @GeneratedValue(
+        strategy = GenerationType.SEQUENCE,
+        generator = "edificio-sequence-generator"
+    )
+    @SequenceGenerator(
+        name = "edificio-sequence-generator",
+        sequenceName = "edificio_sequence"
+    )
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "nome")
+    private String nome;
+
+    @Column(name = "endereco")
+    private String endereco;
+
+    @OneToMany(mappedBy = "edificio")
+    private List<Apartamento> apartamentos;
+
+    public Edificio() {
     }
 
-    public String mostrarApartamentos() {
-        return this.apartamentos.toString();
+    public Edificio(String nome, String endereco) {
+        this.nome = nome;
+        this.endereco = endereco;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Edificio edificio = (Edificio) o;
-        return id == edificio.id;
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public List<Apartamento> getApartamentos() {
+        return apartamentos;
+    }
+
+    public void setApartamentos(List<Apartamento> apartamentos) {
+        this.apartamentos = apartamentos;
     }
 }
